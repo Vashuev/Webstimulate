@@ -1,0 +1,79 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .card-positive { background-color: #8bc34a; color: black; } /* Green */
+        .card-neutral { background-color: #ffeb3b; color: black; } /* Yellow */
+        .card-negative { background-color: #f44336; color: black; } /* Red */
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Admin Dashboard</h1>
+        <div class="row mt-4">
+            {% for user in user_data %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        {{ user.user.username }}
+                    </div>
+                    <div class="card-body">
+                        <!-- Display 'Not Contacted' count at the top -->
+                        <div class="mb-2">
+                            <strong>Not Contacted:</strong> {{ user.status_counts.not_contacted }}
+                        </div>
+                        
+                        <!-- Positive Status Sub-Card -->
+                        <div class="card mb-2">
+                            <div class="card-header card-positive ">
+                                Positive Status
+                            </div>
+                            <div class="card-body">
+                                {% for status in positive_statuses %}
+                                <div class="mb-2">
+                                    <strong>{{ status|capfirst }}:</strong> {{ user.status_counts.positive|dict_item:status }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Neutral Status Sub-Card -->
+                        <div class="card  mb-2">
+                            <div class="card-header card-neutral">
+                                Neutral Status
+                            </div>
+                            <div class="card-body">
+                                {% for status in neutral_statuses %}
+                                <div class="mb-2">
+                                    <strong>{{ status|capfirst }}:</strong> {{ user.status_counts.neutral|dict_item:status }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Negative Status Sub-Card -->
+                        <div class="card mb-2">
+                            <div class="card-header card-negative">
+                                Negative Status
+                            </div>
+                            <div class="card-body">
+                                {% for status in negative_statuses %}
+                                <div class="mb-2">
+                                    <strong>{{ status|capfirst }}:</strong> {{ user.status_counts.negative|dict_item:status }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <a href="{% url 'user_dashboard' user.user.id %}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
