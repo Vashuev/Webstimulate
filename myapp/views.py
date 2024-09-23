@@ -30,20 +30,6 @@ def custom_login(request):
 
 
 
-# @login_required
-# def admin_dashboard(request):
-#     if not request.user.is_staff:
-#         return redirect('user_dashboard')
-
-#     entries = Entry.objects.all()
-#     users = User.objects.all()
-
-#     context = {
-#         'entries': entries,
-#         'users': users,
-#     }
-#     return render(request, 'admin_dashboard.html', context)
-
 
 
 @login_required
@@ -155,6 +141,14 @@ def update_user_status(request, entry_id):
         return redirect('user_dashboard')
 
     if request.method == 'POST':
-        entry.status = request.POST.get('status')
+        # Update the status
+        status = request.POST.get('status')
+        entry.status = status
         entry.save()
+
+        # Check if the status is "Appointment Set"
+        if status == 'appointment_set':
+            return redirect('user_appointment')
+
+        # Otherwise, redirect to the user dashboard
         return redirect('user_dashboard')

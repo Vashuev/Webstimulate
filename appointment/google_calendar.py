@@ -13,17 +13,31 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 def get_credentials():
     creds = None
     credentials_path = settings.GOOGLE_OAUTH2_CLIENT_SECRETS_JSON
+    
+    # Check if token.json exists and load the credentials from it
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    
+    # If there are no valid credentials, authenticate the user
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
+            try:
+                creds.refresh(Request())  # Refresh access token
+            except google.auth.exceptions.RefreshError:
+                print("Token has expired or been revoked. Re-authenticating...")
+                # Do not remove token.json here immediately; handle failure gracefully
+                creds = None  # Reset credentials for full re-authentication
+        
+        # If no valid credentials after trying to refresh, perform full authentication
+        if not creds:
             flow = InstalledAppFlow.from_client_secrets_file(
                 credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
+        
+        # Save the credentials for future use
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
+    
     return creds
 
 def get_calendar_service():
