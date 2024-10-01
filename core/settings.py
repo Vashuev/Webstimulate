@@ -122,3 +122,7 @@ LOGIN_REDIRECT_URL = 'admin_dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
 GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = os.path.join(BASE_DIR, 'credentials.json')
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://cms.webstimulate.in",
+]
