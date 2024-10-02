@@ -66,10 +66,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'webstimulate_cms',                      
+        'NAME': 'webstimulate',                      
         'USER': 'postgres',
         'PASSWORD': 'POST$user#12',
-        'HOST': '147.79.70.149',
+        'HOST': 'database-1.cjs8uggis0mq.ap-south-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
