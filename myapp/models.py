@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Category(models.Model):
+    category_name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.category_name
+
+
 class Entry(models.Model):
     STATUS_CHOICES = [
         ('not_contacted', 'Not Contacted'),
@@ -17,21 +24,6 @@ class Entry(models.Model):
         ('disconnected_number', 'Disconnected Number'),
     ]
 
-    CATEGORY_CHOICES = [
-        ('local_shops', 'Local Shops and Boutiques'),
-        ('online_sellers', 'Online Sellers'),
-        ('healthcare', 'Healthcare Providers'),
-        ('education', 'Education and Coaching Centers'),
-        ('beauty', 'Beauty and Wellness'),
-        ('restaurants', 'Restaurants and Cafes'),
-        ('hotels', 'Hotels and Guesthouses'),
-        ('freelancers', 'Freelancers and Consultants'),
-        ('real_estate', 'Real Estate Agents'),
-        ('manufacturers', 'Small-scale Manufacturers'),
-        ('event_planners', 'Event Planners and Organizers'),
-        ('travel_agencies', 'Travel Agencies'),
-    ]
-
     name = models.CharField(max_length=100)
     place = models.CharField(max_length=100)
     number = models.CharField(max_length=15)
@@ -39,7 +31,10 @@ class Entry(models.Model):
     remarks = models.TextField(blank=True)
     status = models.CharField(max_length=26, choices=STATUS_CHOICES, default='not_contacted')
     assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_entries')
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='local_shops')
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        unique_together = ('name', 'number')
 
     def __str__(self):
         return self.name

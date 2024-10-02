@@ -12,4 +12,6 @@ urlpatterns = [
     path('entry/update_status/<int:entry_id>/', views.update_user_status, name='update_user_status'),
     path('entry/update/<int:pk>/', views.update_entry, name='update_entry'),
     path('status_meanings/', views.status_meanings, name='status_meanings'),
+    path('admin_dashboard/bulk-upload/', views.bulk_upload_view, name='bulk_upload_view'),
+    path('admin_dashboard/download-example-csv/', views.download_example_csv, name='download_example_csv'),
 ]

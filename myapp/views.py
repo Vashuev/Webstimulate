@@ -2,13 +2,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
-from .models import Entry
-from .forms import EntryForm, EntryUpdateForm
+from .models import Entry, Category
+from .forms import EntryForm, EntryUpdateForm, CSVUploadForm
 from django.http import HttpResponseForbidden
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.core.paginator import Paginator
+import csv
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
+from django.http import HttpResponse
+
 
 def custom_login(request):
     if request.method == 'POST':
@@ -76,6 +81,8 @@ def admin_dashboard(request):
 
 @login_required
 def user_dashboard(request,  user_id=None):
+    if request.user.is_staff:
+        return redirect('admin_dashboard')
     if user_id:
         user = get_object_or_404(User, id=user_id)
         entries = Entry.objects.filter(assigned_to=user)
@@ -155,6 +162,72 @@ def update_user_status(request, entry_id):
         # Otherwise, redirect to the user dashboard
         return redirect('user_dashboard')
 
-
+@login_required
 def status_meanings(request):
     return render(request, 'status_meanings.html')
+
+@user_passes_test(lambda u: u.is_superuser)
+def bulk_upload_view(request):
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            assigned_user = form.cleaned_data['assigned_user']
+
+            try:
+                # Read the CSV file
+                decoded_file = csv_file.read().decode('utf-8').splitlines()
+                reader = csv.DictReader(decoded_file)
+                entries_to_create = []
+
+                for row in reader:
+                    name = row['Name']
+                    place = row['Place']
+                    number = row['Number']
+                    links = row['Link']
+                    category_name = row['Category']
+
+                    # Check if the category exists, if not, create it
+                    category, created = Category.objects.get_or_create(category_name=category_name)
+                    if created:
+                        messages.success(request, f'Category "{category_name}" created.')
+
+                    # Prepare the Entry instance
+                    entry = Entry(
+                        name=name,
+                        place=place,
+                        number=number,
+                        links=links,
+                        assigned_to=assigned_user,
+                        category=category
+                    )
+                    entries_to_create.append(entry)
+
+                # Bulk create all entries
+                Entry.objects.bulk_create(entries_to_create)
+                messages.success(request, f'Successfully inserted {len(entries_to_create)} entries.')
+
+                return redirect('bulk_upload_view')
+
+            except Exception as e:
+                # Catch any exception and display an error message
+                messages.error(request, f'Error occurred: {str(e)}')
+
+    else:
+        form = CSVUploadForm()
+
+    return render(request, 'bulk_upload.html', {'form': form})
+
+
+def download_example_csv(request):
+    # Create the response object and set the appropriate content type
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=example_data.csv'
+
+    # Create a CSV writer
+    writer = csv.writer(response)
+    
+    # Write the header
+    writer.writerow(['Name', 'Place', 'Number', 'Link', 'Category'])
+    
+    return response

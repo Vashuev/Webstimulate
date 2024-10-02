@@ -36,6 +36,13 @@
             <li class="nav-item {% if request.resolver_match.url_name == 'user_appointment' %}active{% endif %}">
               <a class="nav-link" href="{% url 'user_appointment' %}">Check Appointments</a>
             </li>
+
+            {% if user.is_staff %}
+            <li class="nav-item {% if request.resolver_match.url_name == 'bulk_upload_view' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'bulk_upload_view' %}">Bulk Upload</a>
+            </li>
+            {% endif %}
+            
           </ul>
           <!-- Right Aligned Items -->
           <ul class="navbar-nav ml-auto">
