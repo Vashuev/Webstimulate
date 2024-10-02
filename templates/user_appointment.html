@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Appointments</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
-    <meta name="csrf-token" content="{{ csrf_token }}">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>User Appointments</h1>
-        <div id="calendar"></div>
-    </div>
+<!-- myapp/templates/myapp/user_appointment.html -->
+{% extends 'base.html' %}
+
+{% block title %}User Appointments{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+    <h1>User Appointments</h1>
+    <div id="calendar"></div>
 
     <!-- Modal for creating an appointment -->
-    <div class="modal fade" id="createAppointmentModal" tabindex="-1" role="dialog" aria-labelledby="createAppointmentModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createAppointmentModal" tabindex="-1" role="dialog" 
+         aria-labelledby="createAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createAppointmentModalLabel">Create Appointment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" 
+                            aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -43,7 +43,8 @@
                         </div>
                         <div class="form-group">
                             <label for="attendees">Attendees</label>
-                            <input type="text" class="form-control" id="attendees" name="attendees" placeholder="Comma-separated emails">
+                            <input type="text" class="form-control" id="attendees" name="attendees" 
+                                   placeholder="Comma-separated emails">
                         </div>
                         <button type="submit" class="btn btn-primary">Create Appointment</button>
                     </form>
@@ -51,11 +52,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{% block extra_js %}
     <script>
         $(document).ready(function() {
             function getCookie(name) {
@@ -121,9 +120,6 @@
                     var formattedStart = formatDateForInput(start.toDate());
                     var formattedEnd = formatDateForInput(end.toDate());
 
-                    console.log('Formatted Start:', formattedStart); // Debug output
-                    console.log('Formatted End:', formattedEnd); // Debug output
-
                     // Set values to input fields
                     $('#createAppointmentForm #start').val(formattedStart);
                     $('#createAppointmentForm #end').val(formattedEnd);
@@ -145,10 +141,12 @@
                         } else {
                             alert('Failed to create appointment');
                         }
+                    },
+                    error: function() {
+                        alert('An error occurred while creating the appointment.');
                     }
                 });
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

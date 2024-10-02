@@ -1,0 +1,77 @@
+<!-- myapp/templates/myapp/base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <!-- Bootstrap CSS (via CDN) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- FullCalendar CSS (via CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+
+    <!-- Custom CSS (served locally) -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="https://webstimulate.in/" target="_blank">Webstimulate</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- Centered Items -->
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'user_dashboard' %}">Dashboard {% if request.resolver_match.url_name == 'dashboard' %}<span class="sr-only">(current)</span>{% endif %}</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'status_meanings' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'status_meanings' %}">Status Meanings</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'user_appointment' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'user_appointment' %}">Check Appointments</a>
+            </li>
+          </ul>
+          <!-- Right Aligned Items -->
+          <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link nav-link" style="padding:0;">Logout</button>
+                </form>                
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        {% block content %}
+        <!-- Child templates will inject their content here -->
+        {% endblock %}
+    </div>
+    
+    <!-- jQuery (via CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper.js (via CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- Bootstrap JS (via CDN) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- FullCalendar JS (via CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

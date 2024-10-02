@@ -1,0 +1,31 @@
+
+
+/* User Dashboard Styles */
+.not_contacted { background-color: #fff59d; } /* Light Yellow */
+.completed_interested { background-color: #c5e1a5; } /* Light Green */
+.completed_not_interested { background-color: #ef9a9a; } /* Light Red */
+.completed_follow_up_needed { background-color: #ffe0b2; } /* Light Orange */
+.voicemail_left { background-color: #fff59d; } /* Light Yellow */
+.wrong_number { background-color: #ef9a9a; } /* Light Red */
+.do_not_call { background-color: #ef9a9a; } /* Light Red */
+.call_back_later { background-color: #fff59d; } /* Light Yellow */
+.no_answer { background-color: #fff59d; } /* Light Yellow */
+.disconnected_number { background-color: #ef9a9a; } /* Light Red */
+.appointment_set { background-color: #c5e1a5; } /* Light Green */
+.in_progress { background-color: #fff59d; } /* Light Yellow */
+.need_to_reassign { background-color: #ffe0b2; } /* Light Orange */
+
+/* Base Template Styles */
+.card-positive { background-color: #c5e1a5; color: black; } /* Light Green */
+.card-neutral { background-color: #fff59d; color: black; } /* Light Yellow */
+.card-negative { background-color: #ef9a9a; color: black; } /* Light Red */
+
+
+/* Additional Custom Styles */
+.pagination .step-links a {
+    margin: 0 5px;
+}
+
+.pagination .current {
+    margin: 0 5px;
+}

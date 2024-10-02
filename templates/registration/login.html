@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Update Entry{% endblock %}
+
+{% block content %}
     <div class="container mt-5">
         <h1>Login</h1>
         <form method="post">
@@ -13,5 +11,5 @@
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
-</body>
-</html>
+    
+{% endblock content %}

@@ -86,6 +86,8 @@ def user_dashboard(request,  user_id=None):
     if status_filter:
         entries = entries.filter(status=status_filter)
 
+    entries = entries.order_by('id') 
+
     paginator = Paginator(entries, 20)  # Show 20 entries per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -152,3 +154,7 @@ def update_user_status(request, entry_id):
 
         # Otherwise, redirect to the user dashboard
         return redirect('user_dashboard')
+
+
+def status_meanings(request):
+    return render(request, 'status_meanings.html')

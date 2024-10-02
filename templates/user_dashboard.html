@@ -1,96 +1,78 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        .not_contacted { background-color: #ffeb3b; } /* Yellow */
-        .completed_interested { background-color: #8bc34a; } /* Green */
-        .completed_not_interested { background-color: #f44336; } /* Red */
-        .completed_follow_up_needed { background-color: #ff9800; } /* Orange */
-        .voicemail_left { background-color: #ffeb3b; } /* Yellow */
-        .wrong_number { background-color: #f44336; } /* Red */
-        .do_not_call { background-color: #f44336; } /* Red */
-        .call_back_later { background-color: #ffeb3b; } /* Yellow */
-        .no_answer { background-color: #ffeb3b; } /* Yellow */
-        .disconnected_number { background-color: #f44336; } /* Red */
-        .appointment_set { background-color: #8bc34a; } /* Green */
-        .in_progress { background-color: #ffeb3b; } /* Yellow */
-        .need_to_reassign { background-color: #ff9800; } /* Orange */
-    </style>
-</head>
-<body>
-    <div class="container mt-4">
-        <h1>User Dashboard: {{username}}</h1>
-        <form method="get" action="">
-            <select name="status_filter" class="form-control mb-3" onchange="this.form.submit()">
-                <option value="">All Statuses</option>
-                {% for choice in status_choices %}
+{% extends 'base.html' %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+    <h1>User Dashboard: {{ username }}</h1>
+    <form method="get" action="">
+        <select name="status_filter" class="form-control mb-3" onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            {% for choice in status_choices %}
                 <option value="{{ choice.0 }}" {% if request.GET.status_filter == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
-                {% endfor %}
-            </select>
-        </form>
-        <table class="table table-bordered mt-4">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Place</th>
-                    <th>Number</th>
-                    <th>Links</th>
-                    <th>Remarks</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for entry in entries %}
-                <tr class="{{ entry.status }}">
-                    <td>{{ entry.name }}</td>
-                    <td>{{ entry.place }}</td>
-                    <td>{{ entry.number }}</td>
-                    <td><a href="{{ entry.links }}" target="_blank">Link</a></td>
-                    <td>
-                        <form method="post" action="{% url 'update_user_remarks' entry.id %}">
-                            {% csrf_token %}
-                            <textarea name="remarks" class="form-control form-control-sm">{{ entry.remarks }}</textarea>
-                            <button type="submit" class="btn btn-primary btn-sm mt-2">Update Remarks</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="post" action="{% url 'update_user_status' entry.id %}">
-                            {% csrf_token %}
-                            <select name="status" class="form-control form-control-sm">
-                                {% for choice in entry.STATUS_CHOICES %}
+            {% endfor %}
+        </select>
+    </form>
+    <table class="table table-bordered mt-4">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Place</th>
+                <th>Number</th>
+                <th>Links</th>
+                <th>Bussiness Type</th>
+                <th>Remarks</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr class="{{ entry.status }}">
+                <td>{{ entry.name }}</td>
+                <td>{{ entry.place }}</td>
+                <td>{{ entry.number }}</td>
+                <td><a href="{{ entry.links }}" target="_blank">Link</a></td>
+                <td>{{ entry.category }}</td>
+                <td>
+                    <form method="post" action="{% url 'update_user_remarks' entry.id %}">
+                        {% csrf_token %}
+                        <textarea name="remarks" class="form-control form-control-sm">{{ entry.remarks }}</textarea>
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Update Remarks</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'update_user_status' entry.id %}">
+                        {% csrf_token %}
+                        <select name="status" class="form-control form-control-sm">
+                            {% for choice in entry.STATUS_CHOICES %}
                                 <option value="{{ choice.0 }}" {% if entry.status == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
-                                {% endfor %}
-                            </select>
-                            <button type="submit" class="btn btn-primary btn-sm mt-2">Update Status</button>
-                        </form>
-                    </td>
-                    <td>
-                        <a href="{% url 'update_entry' entry.id %}" class="btn btn-primary btn-sm">Edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="pagination">
-            <span class="step-links">
-                {% if entries.has_previous %}
-                    <a href="?page=1{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">&laquo; first</a>
-                    <a href="?page={{ entries.previous_page_number }}{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">previous</a>
-                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Update Status</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="{% url 'update_entry' entry.id %}" class="btn btn-primary btn-sm">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if entries.has_previous %}
+                <a href="?page=1{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ entries.previous_page_number }}{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">previous</a>
+            {% endif %}
 
-                <span class="current">
-                    Page {{ entries.number }} of {{ entries.paginator.num_pages }}.
-                </span>
-
-                {% if entries.has_next %}
-                    <a href="?page={{ entries.next_page_number }}{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">next</a>
-                    <a href="?page={{ entries.paginator.num_pages }}{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">last &raquo;</a>
-                {% endif %}
+            <span class="current">
+                Page {{ entries.number }} of {{ entries.paginator.num_pages }}.
             </span>
-        </div>
+
+            {% if entries.has_next %}
+                <a href="?page={{ entries.next_page_number }}{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">next</a>
+                <a href="?page={{ entries.paginator.num_pages }}{% if request.GET.status_filter %}&status_filter={{ request.GET.status_filter }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Status Meanings</h1>
+    <table class="table table-bordered mt-4">
+        <thead class="thead-dark">
+            <tr>
+                <th>Status</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Not Contacted</td>
+                <td>The person has not been contacted yet and is awaiting an initial outreach.</td>
+            </tr>
+            <tr>
+                <td>In Progress</td>
+                <td>Contact has been made, and follow-up actions or further engagement is underway.</td>
+            </tr>
+            <tr>
+                <td>Completed - Interested</td>
+                <td>The conversation has been completed, and the individual has expressed interest in proceeding further.</td>
+            </tr>
+            <tr>
+                <td>Appointment Set</td>
+                <td>An appointment has been successfully scheduled for further discussion or engagement.</td>
+            </tr>
+            <tr>
+                <td>Completed - Follow-Up Needed</td>
+                <td>The discussion has ended, but a follow-up is required for additional steps or clarifications.</td>
+            </tr>
+            <tr>
+                <td>Voicemail Left</td>
+                <td>A voicemail was left as the individual did not answer the call, awaiting a response.</td>
+            </tr>
+            <tr>
+                <td>Call Back Later</td>
+                <td>The individual requested to be called back at a later time.</td>
+            </tr>
+            <tr>
+                <td>No Answer</td>
+                <td>No one answered the call, and no further action has been taken yet.</td>
+            </tr>
+            <tr>
+                <td>Wrong Number</td>
+                <td>The contact number is incorrect, preventing successful communication.</td>
+            </tr>
+            <tr>
+                <td>Do Not Call</td>
+                <td>The individual has requested not to be contacted again in the future.</td>
+            </tr>
+            <tr>
+                <td>Completed - Not Interested</td>
+                <td>The conversation is complete, and the individual has indicated no interest in further engagement.</td>
+            </tr>
+            <tr>
+                <td>Disconnected Number</td>
+                <td>The phone number is disconnected and no longer in service.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
