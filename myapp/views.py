@@ -84,8 +84,11 @@ def user_dashboard(request,  user_id=None):
     if user_id:
         user = get_object_or_404(User, id=user_id)
         entries = Entry.objects.filter(assigned_to=user)
+        username = user.username
     else:
         entries = Entry.objects.filter(assigned_to=request.user)
+        username = request.user.username
+
     status_filter = request.GET.get('status_filter')
 
     if status_filter:
@@ -100,7 +103,7 @@ def user_dashboard(request,  user_id=None):
     context = {
         'entries': page_obj,
         'status_choices': Entry.STATUS_CHOICES,
-        'username': request.user.username,
+        'username': username,
     }
     return render(request, 'user_dashboard.html', context)
 
