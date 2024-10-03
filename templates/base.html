@@ -27,9 +27,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <!-- Centered Items -->
           <ul class="navbar-nav mx-auto">
-            <li class="nav-item {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}">
-              <a class="nav-link" href="{% url 'user_dashboard' %}">Dashboard {% if request.resolver_match.url_name == 'dashboard' %}<span class="sr-only">(current)</span>{% endif %}</a>
-            </li>
+            {% if user.is_staff %}
+              <li class="nav-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'admin_dashboard' %}">Dashboard</a>
+              </li>
+            {% else %}
+              <li class="nav-item {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'user_dashboard' %}">Dashboard</a>
+              </li>
+            {% endif %}
+
             <li class="nav-item {% if request.resolver_match.url_name == 'status_meanings' %}active{% endif %}">
               <a class="nav-link" href="{% url 'status_meanings' %}">Status Meanings</a>
             </li>

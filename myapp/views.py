@@ -81,8 +81,6 @@ def admin_dashboard(request):
 
 @login_required
 def user_dashboard(request,  user_id=None):
-    if request.user.is_staff:
-        return redirect('admin_dashboard')
     if user_id:
         user = get_object_or_404(User, id=user_id)
         entries = Entry.objects.filter(assigned_to=user)
@@ -166,7 +164,7 @@ def update_user_status(request, entry_id):
 def status_meanings(request):
     return render(request, 'status_meanings.html')
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_staff)
 def bulk_upload_view(request):
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
