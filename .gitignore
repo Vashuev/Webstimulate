@@ -167,3 +167,5 @@ fixtures/
 management/
 data.csv
 token.json
+staticfiles/
+*_fixtures*
